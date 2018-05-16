@@ -1,4 +1,4 @@
-package com.miraeducation.springboot.api.miracodechallengeapipessoas;
+package com.miraeducation.springboot.api;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
