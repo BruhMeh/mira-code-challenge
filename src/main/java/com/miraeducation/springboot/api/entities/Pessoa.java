@@ -24,7 +24,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 public class Pessoa {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "pessoa_id")
 	private long id;
 	
@@ -50,7 +50,23 @@ public class Pessoa {
 	
 	private boolean ativo;
 	
-
+	private Pessoa() { }; //JPA use only
+	
+	public Pessoa(String nome, String sobrenome, String cpf, LocalDate dataNascimento, Set<Endereco> enderecos,
+			Set<Telefone> telefones, Set<Email> emails) {
+		this.nome = nome;
+		this.sobrenome = sobrenome;
+		this.cpf = cpf;
+		this.dataNascimento = dataNascimento;
+		enderecos.forEach(n -> n.setPessoa(this));
+		this.enderecos = enderecos;
+		telefones.forEach(n -> n.setPessoa(this));
+		this.telefones = telefones;
+		emails.forEach(n -> n.setPessoa(this));
+		this.emails = emails;
+		this.ativo = true;
+	}
+	
 	public long getId() {
 		return id;
 	}

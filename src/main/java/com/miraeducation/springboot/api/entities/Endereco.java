@@ -1,5 +1,6 @@
 package com.miraeducation.springboot.api.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,14 +14,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Endereco {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
 	private String endereco;
 	
 	private String descricao;
 	
-	@ManyToOne
+	@ManyToOne (cascade = CascadeType.PERSIST)
 	@JoinColumn (name="pessoa_id")
 	@JsonBackReference
 	private Pessoa pessoa;

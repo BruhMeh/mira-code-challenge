@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Telefone {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
 	private String numero;

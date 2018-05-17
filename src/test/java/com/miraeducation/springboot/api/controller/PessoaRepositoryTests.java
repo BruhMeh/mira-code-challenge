@@ -1,10 +1,9 @@
 package com.miraeducation.springboot.api.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.util.List;
+import java.util.Collection;
 
-import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class PessoaRepositoryTests {
 		//TODO Inicializar variaveis que não sejam as do data.sql para testes mais efetivos.
 	
 		//when
-		List<Pessoa> pessoas = pessoaRepository.findAll();
+		Collection<Pessoa> pessoas = pessoaRepository.findAll();
 		
 		//then
 	    assertEquals(pessoas.size(), 2);
