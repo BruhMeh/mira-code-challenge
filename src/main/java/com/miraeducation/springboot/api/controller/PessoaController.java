@@ -2,6 +2,7 @@ package com.miraeducation.springboot.api.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,9 +38,24 @@ public class PessoaController {
 	private PessoaRepository pessoaRepository;
 
 	@GetMapping
-	public ResponseEntity<Resources<PessoaResource>> getPessoas() {
-		final List<PessoaResource> pessoas = pessoaRepository.findAll().stream().map(PessoaResource::new)
-				.collect(Collectors.toList());
+	public ResponseEntity<Resources<PessoaResource>> getPessoas(@RequestParam Map<String, String> queryParameters) {
+
+		List<PessoaResource> pessoas;
+		
+		if (queryParameters.isEmpty()) {
+			pessoas = pessoaRepository.findAll().stream().map(PessoaResource::new)
+					.collect(Collectors.toList());
+		} else {
+			pessoas =  pessoaRepository.findByNomeAndSobrenomeAllIgnoreCaseOrCpf(
+					queryParameters.get("nome"),
+					queryParameters.get("sobrenome"),
+					queryParameters.get("cpf"))
+					.stream().map(PessoaResource::new)
+					 .collect(Collectors.toList());
+			if(pessoas.isEmpty()) {
+				throw new PessoaNotFoundException();
+			}
+		}
 
 		final Resources<PessoaResource> resources = new Resources<>(pessoas);
 
@@ -46,6 +63,7 @@ public class PessoaController {
 
 		return ResponseEntity.ok(resources);
 	}
+
 	@AcceptBulk
 	@GetMapping("/{pessoaId}")
 	public ResponseEntity<PessoaResource> getPessoa(@PathVariable Long pessoaId) {

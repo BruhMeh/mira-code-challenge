@@ -9,5 +9,9 @@ public class PessoaNotFoundException extends RuntimeException {
 		public PessoaNotFoundException(Long userId) {
 			super("Não foi possivel encontrar pessoa com id '" + userId + "'.");
 		}
+		
+		public PessoaNotFoundException() {
+			super("Não foi possivel encontrar pessoa procurada");
+		}
 
 }

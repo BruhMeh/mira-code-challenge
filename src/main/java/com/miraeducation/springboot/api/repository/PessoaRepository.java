@@ -12,6 +12,7 @@ public interface PessoaRepository extends CrudRepository<Pessoa, Long>{
 	
 	Collection<Pessoa> findAll();
 	
-	Pessoa findByNomeAndSobrenome(String nome, String sobrenome);
+	//Realiza a busca: ((nome AND sobrenome) OR cpf)
+	Collection<Pessoa> findByNomeAndSobrenomeAllIgnoreCaseOrCpf(String nome, String sobrenome, String cpf);
 
 }
