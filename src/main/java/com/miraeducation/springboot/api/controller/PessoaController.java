@@ -1,6 +1,8 @@
 package com.miraeducation.springboot.api.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,6 +15,7 @@ import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,18 +44,15 @@ public class PessoaController {
 	public ResponseEntity<Resources<PessoaResource>> getPessoas(@RequestParam Map<String, String> queryParameters) {
 
 		List<PessoaResource> pessoas;
-		
+
 		if (queryParameters.isEmpty()) {
-			pessoas = pessoaRepository.findAll().stream().map(PessoaResource::new)
-					.collect(Collectors.toList());
+			pessoas = pessoaRepository.findAll().stream().map(PessoaResource::new).collect(Collectors.toList());
 		} else {
-			pessoas =  pessoaRepository.findByNomeAndSobrenomeAllIgnoreCaseOrCpf(
-					queryParameters.get("nome"),
-					queryParameters.get("sobrenome"),
-					queryParameters.get("cpf"))
-					.stream().map(PessoaResource::new)
-					 .collect(Collectors.toList());
-			if(pessoas.isEmpty()) {
+			pessoas = pessoaRepository
+					.findByNomeAndSobrenomeAllIgnoreCaseOrCpf(queryParameters.get("nome"),
+							queryParameters.get("sobrenome"), queryParameters.get("cpf"))
+					.stream().map(PessoaResource::new).collect(Collectors.toList());
+			if (pessoas.isEmpty()) {
 				throw new PessoaNotFoundException();
 			}
 		}
@@ -77,7 +77,7 @@ public class PessoaController {
 
 		final Pessoa pessoaSalva = this.pessoaRepository.save(new Pessoa(novaPessoa));
 
-		URI location = ServletUriComponentsBuilder.newInstance().buildAndExpand(pessoaSalva.getId()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(pessoaSalva.getId()).toUri();
 
 		return ResponseEntity.created(location).body(new PessoaResource(pessoaSalva));
 	}
@@ -94,9 +94,7 @@ public class PessoaController {
 		pessoaAlterada.setId(pessoaId);
 		pessoaRepository.save(pessoaAlterada);
 
-		final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
-
-		return ResponseEntity.created(uri).body(new PessoaResource(pessoaAlterada));
+		return ResponseEntity.ok(new PessoaResource(pessoaAlterada));
 	}
 
 	@AcceptBulk
@@ -106,6 +104,27 @@ public class PessoaController {
 			pessoaRepository.deleteById(pessoaId);
 			return ResponseEntity.noContent().build();
 		}).orElseThrow(() -> new PessoaNotFoundException(pessoaId));
+	}
+
+	@PatchMapping("/ativarOuDesativar")
+	public ResponseEntity<Resources<PessoaResource>> ativaOuDesativaPessoa(
+			@Valid @RequestBody Collection<Pessoa> pessoas) {
+		
+		Collection<Pessoa> pessoasAlteradas = new ArrayList<>();
+		
+		pessoas.forEach(pessoaParaAlterar -> {
+			pessoasAlteradas.add(pessoaRepository.findById(pessoaParaAlterar.getId())
+			.map(pessoa -> {
+				pessoa.setAtivo(pessoaParaAlterar.isAtivo());
+				pessoaRepository.save(pessoa);
+				return pessoa;
+			}).orElseThrow(() -> new PessoaNotFoundException(pessoaParaAlterar.getId())));
+		});
+
+		final Resources<PessoaResource> resources = new Resources<>(
+				pessoasAlteradas.stream().map(PessoaResource::new).collect(Collectors.toList()));
+
+		return ResponseEntity.ok(resources);
 	}
 
 }
