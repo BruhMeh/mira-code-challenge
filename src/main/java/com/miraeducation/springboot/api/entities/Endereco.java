@@ -21,7 +21,7 @@ public class Endereco {
 	
 	private String descricao;
 	
-	@ManyToOne (cascade = CascadeType.PERSIST)
+	@ManyToOne 
 	@JoinColumn (name="pessoa_id")
 	@JsonBackReference
 	private Pessoa pessoa;

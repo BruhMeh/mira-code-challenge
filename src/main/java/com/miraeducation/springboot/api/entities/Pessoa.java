@@ -52,18 +52,17 @@ public class Pessoa {
 	
 	private Pessoa() { }; //JPA use only
 	
-	public Pessoa(String nome, String sobrenome, String cpf, LocalDate dataNascimento, Set<Endereco> enderecos,
-			Set<Telefone> telefones, Set<Email> emails) {
-		this.nome = nome;
-		this.sobrenome = sobrenome;
-		this.cpf = cpf;
-		this.dataNascimento = dataNascimento;
-		enderecos.forEach(n -> n.setPessoa(this));
-		this.enderecos = enderecos;
-		telefones.forEach(n -> n.setPessoa(this));
-		this.telefones = telefones;
-		emails.forEach(n -> n.setPessoa(this));
-		this.emails = emails;
+	public Pessoa(Pessoa pessoa) {
+		this.nome = pessoa.getNome();
+		this.sobrenome = pessoa.getSobrenome();
+		this.cpf = pessoa.getCpf();
+		this.dataNascimento = pessoa.getDataNascimento();
+		pessoa.getEnderecos().forEach(n -> n.setPessoa(this));
+		this.enderecos = pessoa.getEnderecos();
+		pessoa.getTelefones().forEach(n -> n.setPessoa(this));
+		this.telefones = pessoa.getTelefones();
+		pessoa.getEmails().forEach(n -> n.setPessoa(this));
+		this.emails = pessoa.getEmails();
 		this.ativo = true;
 	}
 	
