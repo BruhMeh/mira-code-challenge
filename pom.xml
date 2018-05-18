@@ -54,6 +54,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-hateoas</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.github.wnameless.spring</groupId>
+			<artifactId>spring-bulk-api</artifactId>
+			<version>0.6.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
