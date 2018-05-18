@@ -12,7 +12,7 @@ GET /pessoas?nome={nome}&sobrenome={sobrenome}&cpf={cpf}
 GET /pessoas/{id}
 
 PUT /pessoas/{id}
-'''
+```
 {
 "nome": "Bruno",
 "sobrenome": "Delgado",
@@ -43,10 +43,10 @@ PUT /pessoas/{id}
 ],
 "ativo": ""
 }
-'''
+```
 
 POST /pessoas
-'''
+```
 {
 "nome": "Bruno",
 "sobrenome": "Delgado",
@@ -76,10 +76,10 @@ POST /pessoas
 }
 ],
 }
-'''
+```
 
 POST /bulk
-'''
+```
 {
   "operations": [
     {"method": "GET", "url": "/pessoas/1"},
@@ -88,11 +88,11 @@ POST /bulk
     {"method": "DELETE", "url": "/pessoas/3"}
   ]
 }
-'''
+```
 
 
 PATCH /pessoas/ativarOuDesativar
-'''
+```
   [
   	{
   		"id" :1,
@@ -107,4 +107,4 @@ PATCH /pessoas/ativarOuDesativar
       "ativo":false
     }
   ]
-'''
+```
