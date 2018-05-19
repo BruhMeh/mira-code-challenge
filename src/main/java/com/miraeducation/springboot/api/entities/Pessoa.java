@@ -50,7 +50,7 @@ public class Pessoa {
 	
 	private boolean ativo;
 	
-	private Pessoa() { }; //JPA use only
+	public Pessoa() { }; //JPA and tests use only
 	
 	public Pessoa(Pessoa pessoa) {
 		this.nome = pessoa.getNome();
